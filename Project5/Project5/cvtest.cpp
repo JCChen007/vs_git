@@ -1,39 +1,41 @@
 #include <iostream>
 #include<string>
 #include<sstream>
+#include<fstream>
 using namespace std;
 
 
-//#include <opencv2/opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include<opencv2/highgui.hpp>
 #include <opencv2/aruco.hpp>
-//#include <stdio.h>
-//using namespace cv;
+#include<opencv2/imgproc/imgproc.hpp>
+using namespace cv;
 
 
 //int main(int argc, char* argv[])
 int main()
 {
-    cv::Mat markerimage;
-    cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
+// 生成aruco maker 
+//    cv::Mat markerimage;
+//    cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
+//
+//    //cv::aruco::drawMarker(dictionary, 51, 200, markerimage, 1);
+//    //cv::imwrite("marker51.png", markerimage);
+//    //cv::imshow("maker", markerimage);
+//    //cv::waitKey(0);
+//    for (int i = 1; i <= 3; i++)
+//    {
+//        ostringstream ss;
+//        ss << "maker" << i << ".png";
+//        cv::aruco::drawMarker(dictionary, i, 200, markerimage, 1);
+//        cv::imwrite(ss.str(), markerimage);
+//        cv::imshow(ss.str(), markerimage);
+//
+//    }
+//    cv::waitKey(0);
 
-    //cv::aruco::drawMarker(dictionary, 51, 200, markerimage, 1);
-    //cv::imwrite("marker51.png", markerimage);
-    //cv::imshow("maker", markerimage);
-    //cv::waitKey(0);
-    for (int i = 1; i <= 3; i++)
-    {
-        ostringstream ss;
-        ss << "maker" << i << ".png";
-        cv::aruco::drawMarker(dictionary, i, 200, markerimage, 1);
-        cv::imwrite(ss.str(), markerimage);
-        cv::imshow(ss.str(), markerimage);
-
-    }
-    cv::waitKey(0);
-
-
+//识别单图aruco maker 
     //cv::Mat inputImage=cv::imread("newmakers.jpg");
     ////cv::imshow("maker", inputImage);
     ////cv::waitKey(0);
@@ -48,5 +50,67 @@ int main()
     //cv::waitKey(0);
     //cv::imwrite("dection.jpg", outputImage);
 
+    //读取视频文件
+//  cv::namedWindow("example",cv::WINDOW_AUTOSIZE);
+//  cv::VideoCapture cap;
+//  cap.open("movie1.mp4");
+//  cv::Mat frame;
+//while(1)
+//  {
+//      cap >> frame;
+//      if (frame.empty())  break;
+//      cv::imshow("video", frame);
+//      if (cv::waitKey(33) >= 0) break;
+//  }
+
+
+
+    //识别视频aruco maker
+    cv::Mat frame;
+    //cv::namedWindow("example", cv::WINDOW_AUTOSIZE);
+    cv::VideoCapture cap("videotest.mp4");
+    //cap.open("movie1.mp4"); 
+    // 获取输入视频的宽度与高度
+    //int width = (int)cap.get(cv::CAP_PROP_FRAME_WIDTH);
+    //int height = (int)cap.get(cv::VideoCapture ::CAP_PR〇P_FRAME_HEIGHT);
+    VideoWriter out;
+    out.open("outputvideo.mpg",
+        //CAP_OPENCV_MJPEG,
+        VideoWriter::fourcc('D', 'I', 'V', 'X'),
+        cap.get(CAP_PROP_FPS), 
+        cv::Size((int)cap.get(CAP_PROP_FRAME_WIDTH),(int)cap.get(CAP_PROP_FRAME_HEIGHT)),
+        true);
+    if (!cap.isOpened())
+    {
+        cout << "Video load failed!" << endl;
+        return -1;
+    }
+    while (1)
+    { 
+       //读取视频
+       cap >> frame;
+       if (frame.empty())  break;
+       //cv::imshow("video", frame);
+       //if (cv::waitKey(33) >= 0) break;
+
+       //识别aruco maker
+       std::vector<int> markerIds;
+       std::vector<std::vector<cv::Point2f>> markerCorners, rejectedCandidates;
+       cv::Ptr<cv::aruco::DetectorParameters> parameters = cv::aruco::DetectorParameters::create();
+       cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
+       cv::aruco::detectMarkers(frame, dictionary, markerCorners, markerIds, parameters, rejectedCandidates);
+       cv::Mat outImage = frame.clone();
+       cv::aruco::drawDetectedMarkers(outImage, markerCorners, markerIds);
+       //cv::imshow("outvideo", outputImage);
+       //if (cv::waitKey(33) >= 0) break;
+       //cv::imwrite("dection.jpg", outputImage);
+       out << outImage;
+       //imshow("inputvideo", frame);
+       //imshow("outputvideo", outImage);
+       //if (waitKey(37) >= 0) break;
+    }
+
+    cap.release();
     return 0;
+
 }
