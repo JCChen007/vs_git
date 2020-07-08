@@ -37,23 +37,23 @@ int main()
  //   cv::waitKey(0);
 
 //识别单图aruco maker 
-    double start = static_cast<double>(getTickCount());
-    cv::Mat inputImage=cv::imread("new100maker.png");
-    //cv::imshow("maker", inputImage);
+    //double start = static_cast<double>(getTickCount());
+    //cv::Mat inputImage=cv::imread("new100maker.png");
+    ////cv::imshow("maker", inputImage);
+    ////cv::waitKey(0);
+    //std::vector<int> markerIds;
+    //std::vector<std::vector<cv::Point2f>> markerCorners, rejectedCandidates;
+    //cv::Ptr<cv::aruco::DetectorParameters> parameters = cv::aruco::DetectorParameters::create();
+    //cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
+    //cv::aruco::detectMarkers(inputImage, dictionary, markerCorners, markerIds, parameters, rejectedCandidates);
+    //cv::Mat outputImage = inputImage.clone();
+    //cv::aruco::drawDetectedMarkers(outputImage, markerCorners, markerIds);
+    //double end = static_cast<double>(getTickCount());
+    //double run_time = (end - start) / getTickFrequency();
+    //cout << "run_time=" << run_time << " seconds" << endl;
+    //cv::imshow("detectionimage", outputImage);
     //cv::waitKey(0);
-    std::vector<int> markerIds;
-    std::vector<std::vector<cv::Point2f>> markerCorners, rejectedCandidates;
-    cv::Ptr<cv::aruco::DetectorParameters> parameters = cv::aruco::DetectorParameters::create();
-    cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
-    cv::aruco::detectMarkers(inputImage, dictionary, markerCorners, markerIds, parameters, rejectedCandidates);
-    cv::Mat outputImage = inputImage.clone();
-    cv::aruco::drawDetectedMarkers(outputImage, markerCorners, markerIds);
-    double end = static_cast<double>(getTickCount());
-    double run_time = (end - start) / getTickFrequency();
-    cout << "run_time=" << run_time << " seconds" << endl;
-    cv::imshow("detectionimage", outputImage);
-    cv::waitKey(0);
-    cv::imwrite("dection100.jpg", outputImage);
+    //cv::imwrite("dection100.jpg", outputImage);
 
     //读取视频文件
 //  cv::namedWindow("example",cv::WINDOW_AUTOSIZE);
@@ -74,6 +74,8 @@ int main()
     cv::Mat frame;
     //cv::namedWindow("example", cv::WINDOW_AUTOSIZE);
     cv::VideoCapture cap("test2.mp4");
+    cap.set(cv::CAP_PROP_FRAME_WIDTH, 1984);//设置读入分辨率
+    cap.set(cv::CAP_PROP_FRAME_HEIGHT, 1264);
     //int ex = static_cast<int>(cap.get(CAP_PROP_FOURCC));
     //char EXT[] = {ex&0XFF,(ex&0XFF00)>>8,(ex&0XFF0000)>>16,(ex&0XFF000000)>>24,0};
     //cap.open("movie1.mp4"); 
@@ -86,7 +88,7 @@ int main()
         VideoWriter::fourcc('D', 'I', 'V', 'X'),
         //ex,
         //cap.get(CAP_PROP_FPS), //获取帧率
-        30,
+        20,
         cv::Size((int)cap.get(CAP_PROP_FRAME_WIDTH),(int)cap.get(CAP_PROP_FRAME_HEIGHT)),
         true);
     if (!cap.isOpened())
