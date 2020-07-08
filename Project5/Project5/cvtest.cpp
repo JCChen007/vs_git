@@ -74,6 +74,7 @@ int main()
     cv::Mat frame;
     //cv::namedWindow("example", cv::WINDOW_AUTOSIZE);
     cv::VideoCapture cap("test2.mp4");
+    cap.set(CAP_PROP_EXPOSURE,-8);//设置曝光时间
     cap.set(cv::CAP_PROP_FRAME_WIDTH, 1984);//设置读入分辨率
     cap.set(cv::CAP_PROP_FRAME_HEIGHT, 1264);
     //int ex = static_cast<int>(cap.get(CAP_PROP_FOURCC));
