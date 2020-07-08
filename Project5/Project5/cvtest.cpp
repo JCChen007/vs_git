@@ -10,6 +10,7 @@ using namespace std;
 #include<opencv2/highgui.hpp>
 #include <opencv2/aruco.hpp>
 #include<opencv2/imgproc/imgproc.hpp>
+#include <opencv2/videoio.hpp> 
 using namespace cv;
 
 
@@ -69,57 +70,61 @@ int main()
 
 
 
-    ////识别视频aruco maker
-    //cv::Mat frame;
-    ////cv::namedWindow("example", cv::WINDOW_AUTOSIZE);
-    //cv::VideoCapture cap("test2.mp4");
-    ////cap.open("movie1.mp4"); 
-    //// 获取输入视频的宽度与高度
-    ////int width = (int)cap.get(cv::CAP_PROP_FRAME_WIDTH);
-    ////int height = (int)cap.get(CAP_PR〇P_FRAME_HEIGHT);
-    //VideoWriter out;
-    //out.open("outputtest2.mpg",
-    //    //CAP_OPENCV_MJPEG,
-    //    VideoWriter::fourcc('D', 'I', 'V', 'X'),
-    //    cap.get(CAP_PROP_FPS), 
-    //    cv::Size((int)cap.get(CAP_PROP_FRAME_WIDTH),(int)cap.get(CAP_PROP_FRAME_HEIGHT)),
-    //    true);
-    //if (!cap.isOpened())
-    //{
-    //    cout << "Video load failed!" << endl;
-    //    return -1;
-    //}
-    //if (!out.isOpened())
-    //{
-    //    cout << "Video writer failed!" << endl;
-    //    return -2;
-    //}
-    //while (1)
-    //{ 
-    //   //读取视频
-    //   cap >> frame;
-    //   if (frame.empty())  break;
-    //   //cv::imshow("video", frame);
-    //   //if (cv::waitKey(33) >= 0) break;
+    //识别视频aruco maker
+    cv::Mat frame;
+    //cv::namedWindow("example", cv::WINDOW_AUTOSIZE);
+    cv::VideoCapture cap("test2.mp4");
+    //int ex = static_cast<int>(cap.get(CAP_PROP_FOURCC));
+    //char EXT[] = {ex&0XFF,(ex&0XFF00)>>8,(ex&0XFF0000)>>16,(ex&0XFF000000)>>24,0};
+    //cap.open("movie1.mp4"); 
+    // 获取输入视频的宽度与高度
+    //int width = (int)cap.get(cv::CAP_PROP_FRAME_WIDTH);
+    //int height = (int)cap.get(CAP_PR〇P_FRAME_HEIGHT);
+    VideoWriter out;
+    out.open("outputtest2.mpg",
+        //CAP_OPENCV_MJPEG,
+        VideoWriter::fourcc('D', 'I', 'V', 'X'),
+        //ex,
+        //cap.get(CAP_PROP_FPS), //获取帧率
+        30,
+        cv::Size((int)cap.get(CAP_PROP_FRAME_WIDTH),(int)cap.get(CAP_PROP_FRAME_HEIGHT)),
+        true);
+    if (!cap.isOpened())
+    {
+        cout << "Video load failed!" << endl;
+        return -1;
+    }
+    if (!out.isOpened())
+    {
+        cout << "Video writer failed!" << endl;
+        return -2;
+    }
+    while (1)
+    { 
+       //读取视频
+       cap >> frame;
+       if (frame.empty())  break;
+       //cv::imshow("video", frame);
+       //if (cv::waitKey(33) >= 0) break;
 
-    //   //识别aruco maker
-    //   std::vector<int> markerIds;
-    //   std::vector<std::vector<cv::Point2f>> markerCorners, rejectedCandidates;
-    //   cv::Ptr<cv::aruco::DetectorParameters> parameters = cv::aruco::DetectorParameters::create();
-    //   cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
-    //   cv::aruco::detectMarkers(frame, dictionary, markerCorners, markerIds, parameters, rejectedCandidates);
-    //   cv::Mat outImage = frame.clone();
-    //   cv::aruco::drawDetectedMarkers(outImage, markerCorners, markerIds);
-    //   //cv::imshow("outvideo", outputImage);
-    //   //if (cv::waitKey(33) >= 0) break;
-    //   //cv::imwrite("dection.jpg", outputImage);
-    //   out << outImage;
-    //   //imshow("inputvideo", frame);
-    //   //imshow("outputvideo", outImage);
-    //   //if (waitKey(37) >= 0) break;
-    //}
+       //识别aruco maker
+       std::vector<int> markerIds;
+       std::vector<std::vector<cv::Point2f>> markerCorners, rejectedCandidates;
+       cv::Ptr<cv::aruco::DetectorParameters> parameters = cv::aruco::DetectorParameters::create();
+       cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
+       cv::aruco::detectMarkers(frame, dictionary, markerCorners, markerIds, parameters, rejectedCandidates);
+       cv::Mat outImage = frame.clone();
+       cv::aruco::drawDetectedMarkers(outImage, markerCorners, markerIds);
+       //cv::imshow("outvideo", outputImage);
+       //if (cv::waitKey(33) >= 0) break;
+       //cv::imwrite("dection.jpg", outputImage);
+       out << outImage;
+       //imshow("inputvideo", frame);
+       //imshow("outputvideo", outImage);
+       //if (waitKey(37) >= 0) break;
+    }
 
-    //cap.release();
+    cap.release();
 
     return 0;
 
